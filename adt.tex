@@ -1,0 +1,57 @@
+\documentclass{amsart}
+
+\title{Abstract Data Types}
+\author{Todd D. Vance}
+\date{\today}
+
+\begin{document}
+\maketitle{}
+
+\section{Abstract Data Type}
+One method for designing classes in an object-oriented fashion is via an \emph{abstract data type}.  The various abstract data types can be defined formally or semi-formally, or in a casual language.  There are benefits to each of the various levels of formality.  The author proposes an axiomatic approach (similar to Nell/Walker (http://dl.acm.org/citation.cfm?id=230973), though perhaps less formally; see also Liskov/Zilles 1974, Programming with Abstract Data Types) as a way of accurately communicating the specification of a class as well as unit tests.  This approach to abstract data types can be thought of as being to the design of a system as ``test driven development'' is to the writing of the programs for a system.
+
+
+\section{Set}
+The ADT $\mathbf{set}$ can be specified by the following operations and axioms.  We assume another type $\mathbf{E}$ representing the type of the elements of the set.  This specifies an immutable set, where elements are added or removed by returning a new set.  Here are the supported operations:
+
+\begin{enumerate}
+\item $\mathrm{empty}:\emptyset\rightarrow\mathbf{set}$.
+\item $\mathrm{size}:\mathbf{set}\rightarrow\mathbf{N}$ (where $\mathbf{N}$ represents nonnegative integers).
+\item $\mathrm{contains}:\mathbf{set}\times\mathbf{E}\rightarrow\mathbf{bool}$ (where $\mathbf{bool}=\{\mathrm{true},\mathrm{false}\}$ represents the Boolean type).
+\item $\mathrm{add}:\mathbf{set}\times\mathbf{E}\rightarrow\mathbf{set}$
+\item $\mathrm{remove}:\mathbf{set}\times\mathbf{E}\rightarrow\mathbf{set}$
+\end{enumerate}
+
+Informally, $\mathrm{empy}$ is a nullary operation, that is, a constant.  It represents the empty set.  The $\mathrm{size}$ operation applied to any set returns the number of elements.  The $\mathrm{contains}$ operation applied to a set and an element returns $\mathrm{true}$ if the element is in the set.  Otherwise, it returns $\mathrm{false}$.  The $\mathrm{add}$ operation applied to a set and an element returns the set whose elements are the elements of the specified set along with the specified element.  The $\mathrm{remove}$ operation applied to a set and an element returns the set whose elements are the elements of the specified set except for the specified element.
+
+The axioms specifying the behavior of the operations are as follows:
+
+\begin{enumerate}
+\item $\mathrm{size}(\mathrm{empty})=0$
+\item if $\mathrm{contains}(s, e)=\mathrm{false}$, then $\mathrm{size}(\mathrm{add}(s, e)) = \mathrm{size}(s) + 1$
+\item if $\mathrm{contains}(s, e)=\mathrm{true}$, then $\mathrm{add}(s, e) = s$
+\item if $\mathrm{contains}(s, e)=\mathrm{true}$, then $\mathrm{size}(\mathrm{remove}(s, e)) = \mathrm{size}(s) - 1$
+\item if $\mathrm{contains}(s, e)=\mathrm{false}$, then $\mathrm{remove}(s, e) = s$
+\item $\mathrm{contains}(empty, e) = \mathrm{false}$
+\item $\mathrm{contains}(\mathrm{add}(s, e), e)=\mathrm{true}$
+\item If $e\ne{f}$, then $\mathrm{contains}(\mathrm{add}(s, e), f)=\mathrm{contains}(s,f)$
+\item $\mathrm{contains}(\mathrm{remove}(s, e), e)=\mathrm{false}$
+\item If $e\ne{f}$, then $\mathrm{contains}(\mathrm{remove}(s, e), f)=\mathrm{contains}(s,f)$
+\end{enumerate}
+
+
+One could specify a mutable version of $\mathbf{set}$ as a structure having just one modifiable attribute: the immutable set.  Thus, we have something like $s$, such that $s.\mathrm{set}$ is a $\mathbf{set}$.  We can modify $s$: $s.\mathrm{set} \leftarrow t$ where $t$ is some $\mathbf{set}$.
+
+Instead of $\mathrm{empty}$ is $\mathrm{new~\mathbf{set}}$ which is a structure whose attribute is equal to $\mathrm{empty}$.    So, $s\leftarrow \mathrm{new~\mathbf{set}}$ causes $s.\mathrm{set}$ to equal $\mathrm{empty}$.
+
+The $\mathrm{add}$ operation then modifies $s$ as follows: $\mathrm{add}(s, e)$ performs the operation $s.\mathrm{set}\leftarrow \mathrm{add}(\mathrm{set}, e)$.
+
+Similarly, the $\mathrm{remove}$ operation modifies $s$ as follows: $\mathrm{remove}(s, e)$ performs the operation $s.\mathrm{set}\leftarrow \mathrm{remove}(\mathrm{set}, e)$.
+
+The remaining operations just operate directly on $s.\mathrm{set}$.  So, $\mathrm{contains}(s, e)$ is equal to $\mathrm{contains}(s.\mathrm{set}, e)$, and likewise for the other operations.
+
+The analogous scheme can be used to turn any immutable ADT having operations that return different instances of the ADT into a corresponding mutable ADT.
+
+
+
+\end{document}
